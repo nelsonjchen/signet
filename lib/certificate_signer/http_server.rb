@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'certificate_signer/authenticator'
-require 'certificate_signer/signer'
+require 'certificate_signer/certificate_signer'
 
 module CertificateSigner
   class HTTPServer < Sinatra::Base
@@ -12,7 +12,7 @@ module CertificateSigner
 
     post '/csr' do
       begin
-        Signer.certificate_for params[:csr]
+        CertificateSigner.certificate_for params[:csr]
       rescue ArgumentError
         halt_with :bad_request
       end
