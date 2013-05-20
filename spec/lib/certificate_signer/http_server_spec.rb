@@ -43,6 +43,8 @@ describe CertificateSigner::HTTPServer do
   it 'generates a certificate for a valid certificate signing request' do
     pending 'implement Signer'
     csr_post
-    expect { OpenSSL::X509::Certificate.new(last_response.body) }.to_not raise_error OpenSSL::X509::CertificateError
+    expect {
+      OpenSSL::X509::Certificate.new(last_response.body)
+    }.to_not raise_error OpenSSL::X509::CertificateError
   end
 end
