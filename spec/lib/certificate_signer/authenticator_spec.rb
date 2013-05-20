@@ -4,14 +4,14 @@ require 'certificate_signer/user'
 
 module CertificateSigner
   describe Authenticator do
-    describe '::authenticates?' do
+    describe '::valid_identity_key?' do
 
       it 'fails with an invalid authentication token' do
-        Authenticator.authenticates?('invalid_token').should be false
+        Authenticator.valid_identity_key?('invalid_token').should be false
       end
 
       it 'succeeds with valid authentication token' do
-        Authenticator.authenticates?(valid_user.identity_key).should be true
+        Authenticator.valid_identity_key?(valid_user.identity_key).should be true
       end
     end
   end

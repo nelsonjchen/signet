@@ -7,7 +7,7 @@ module CertificateSigner
 
     before do
       halt_with :bad_request if params[:auth].nil?
-      halt_with :forbidden unless Authenticator.authenticates? params[:auth]
+      halt_with :forbidden unless Authenticator.valid_identity_key? params[:auth]
     end
 
     post '/csr' do
