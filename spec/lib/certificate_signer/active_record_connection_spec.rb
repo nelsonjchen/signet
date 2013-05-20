@@ -17,4 +17,15 @@ describe CertificateSigner::ActiveRecordConnection do
       ActiveRecord::Base.connection
     }.to_not raise_error ActiveRecord::ConnectionNotEstablished
   end
+
+  context 'when included by many classes simultaneously' do
+
+    it 'uses the same connection for all classes' do
+      connection = nil
+      in_new_class_with_connection { connection = ActiveRecord::Base.connection }
+      10.times {
+        in_new_class_with_connection { ActiveRecord::Base.connection.should == connection }
+      }
+    end
+  end
 end
