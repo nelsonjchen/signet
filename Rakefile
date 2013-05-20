@@ -8,7 +8,8 @@ RSpec::Core::RakeTask.new(:spec)
 namespace :db do
   desc 'Migrate the database (optionally to a specific VERSION)'
   task migrate: :environment do
-    ActiveRecord::Migrator.migrate('db/migrate', ENV['VERSION'] ? ENV['VERSION'].to_i : nil)
+    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
+    ActiveRecord::Migrator.migrate 'db/migrate', version
   end
 end
 
