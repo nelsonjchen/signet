@@ -8,7 +8,7 @@ module CertificateSigner
     end
 
     def environment
-      ENV['RACK_ENV'] || 'test'
+      ENV['RACK_ENV'] or raise ArgumentError.new("ENV['RACK_ENV'] must be defined")
     end
   end
 end

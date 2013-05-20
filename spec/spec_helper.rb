@@ -22,10 +22,10 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
 
+ENV['RACK_ENV'] = 'test'
+
 FactoryGirl.find_definitions
 
 def valid_user
   @valid_user ||= FactoryGirl.build(:user)
 end
-
-ENV['RACK_ENV'] = 'test'

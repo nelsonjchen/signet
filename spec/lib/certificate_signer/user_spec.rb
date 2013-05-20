@@ -1,10 +1,11 @@
 require 'spec_helper'
 require 'certificate_signer/user'
+require 'certificate_signer/active_record_connection'
 
-module CertificateSigner
-  describe User do
-    it 'is an ActiveRecord::Base instance' do
-      User.ancestors.include? ActiveRecord::Base
-    end
+describe CertificateSigner::User do
+  context 'class ancestors' do
+    subject { CertificateSigner::User.ancestors }
+    it { should include ActiveRecord::Base }
+    it { should include CertificateSigner::ActiveRecordConnection }
   end
 end
