@@ -9,7 +9,7 @@ describe CertificateSigner::CertificateSigner do
   describe '::certificate_for(csr_string)' do
 
     it 'accepts a valid certificate signing request represented as a string' do
-      expect { CertificateSigner::CertificateSigner.certificate_for  valid_csr }.to_not raise_error
+      expect { CertificateSigner::CertificateSigner.certificate_for valid_csr }.to_not raise_error
     end
 
     it 'raises an ArgumentError if no csr_string is set' do
