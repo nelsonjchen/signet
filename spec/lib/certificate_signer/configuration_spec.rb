@@ -14,6 +14,10 @@ describe CertificateSigner::Configuration do
     ENV['RACK_ENV'] = original_env
   end
 
+  def expected_config_path(env)
+    File.expand_path("#{File.dirname(__FILE__)}../../../../config/#{env}.yml")
+  end
+
   describe '#environment' do
 
     it "gets the value of ENV['RACK_ENV']" do
@@ -31,6 +35,21 @@ describe CertificateSigner::Configuration do
     end
   end
 
+  describe '#config_path' do
+
+    before(:each) do
+      CertificateSigner::Configuration.class_variable_set :@@config_path, nil
+    end
+
+    it 'returns the path to the configuration file' do
+      env = 'derp'
+      expected_config_path = expected_config_path(env)
+      with_rack_env(env) do
+        in_new_class { config_path.should == expected_config_path }
+      end
+    end
+  end
+
   describe '#config' do
 
     before(:each) do
@@ -41,8 +60,10 @@ describe CertificateSigner::Configuration do
     after(:all) { YAML.rspec_reset }
 
     it 'loads the appropriate YAML file for the environment' do
-      with_rack_env('derp') do
-        YAML.should_receive(:load_file).with("config/derp.yml")
+      env = 'derp'
+      expected_config_path = expected_config_path(env)
+      with_rack_env(env) do
+        YAML.should_receive(:load_file).with expected_config_path
         in_new_class { config }
       end
     end
