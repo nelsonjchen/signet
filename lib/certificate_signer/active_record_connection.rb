@@ -4,6 +4,6 @@ require 'certificate_signer/configuration'
 module CertificateSigner
   module ActiveRecordConnection
     extend Configuration
-    ActiveRecord::Base.establish_connection YAML.load_file('config/database.yml')[environment]
+    ActiveRecord::Base.establish_connection config['database']
   end
 end

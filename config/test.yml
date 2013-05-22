@@ -1,0 +1,14 @@
+database:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+certificate_authority:
+  passphrase: the ultimate secret!
+  subject:
+    C: US
+    ST: California
+    L: Santa Barbara
+    O: receipt.com
+    OU: IT
+  expiry_seconds: 3.15569e8 # 10 years in seconds

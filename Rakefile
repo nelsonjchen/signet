@@ -1,5 +1,10 @@
+$: << 'lib'
+
 require 'rspec/core/rake_task'
 require 'active_record'
+require 'certificate_signer/configuration'
+
+include CertificateSigner::Configuration
 
 task default: :spec
 
@@ -14,15 +19,5 @@ namespace :db do
 end
 
 task :environment do
-  ActiveRecord::Base.establish_connection config
-end
-
-private
-
-def config
-  @config ||= YAML.load_file('config/database.yml')[environment]
-end
-
-def environment
-  @environment ||= ENV['RACK_ENV'] || defined?(RSpec) ? 'test' : 'development'
+  ActiveRecord::Base.establish_connection config['database']
 end
