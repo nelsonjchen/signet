@@ -2,4 +2,4 @@ rvm:
   - 1.9.3
   - 2.0.0
 before_script:
-  - rake db:migrate
+  - RACK_ENV=test rake init
