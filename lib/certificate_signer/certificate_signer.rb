@@ -1,4 +1,5 @@
 require 'openssl'
+require 'certificate_signer/certificate_authority'
 
 module CertificateSigner
   class CertificateSigner
@@ -10,12 +11,8 @@ module CertificateSigner
       certificate.subject    = request.subject
       certificate.public_key = request.public_key
 
-      # certificate.sign ca_key.private_key, OpenSSL::Digest::SHA1.new
+      # certificate.sign CertificateAuthority.private_key, OpenSSL::Digest::SHA1.new
       certificate.to_pem
-    end
-
-    def self.ca_key
-      @@ca_key ||= nil
     end
   end
 end

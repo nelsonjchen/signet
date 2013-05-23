@@ -24,7 +24,7 @@ describe CertificateSigner::CertificateSigner do
 
 
     it 'signs a valid certificate request' do
-      pending 'implement CertificateSigner'
+      pending
       cert = CertificateSigner::CertificateSigner.certificate_for(valid_csr)
       expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
     end

@@ -10,4 +10,7 @@ module OpenSSLHelpers
 
     csr.sign key, OpenSSL::Digest::SHA1.new
   end
+
+  def ca_private_key
+  end
 end

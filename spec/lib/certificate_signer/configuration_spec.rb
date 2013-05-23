@@ -54,6 +54,7 @@ describe CertificateSigner::Configuration do
 
     before(:each) do
       CertificateSigner::Configuration.class_variable_set :@@config, nil
+      CertificateSigner::Configuration.class_variable_set :@@config_path, nil
       YAML.rspec_reset
     end
 
