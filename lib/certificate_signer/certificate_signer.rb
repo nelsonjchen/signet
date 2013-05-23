@@ -11,7 +11,7 @@ module CertificateSigner
       certificate.subject    = request.subject
       certificate.public_key = request.public_key
 
-      # certificate.sign CertificateAuthority.private_key, OpenSSL::Digest::SHA1.new
+      certificate.sign CertificateAuthority.private_key, OpenSSL::Digest::SHA1.new
       certificate.to_pem
     end
   end

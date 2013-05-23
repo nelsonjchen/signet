@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'certificate_signer/certificate_authority'
 require 'certificate_signer/configuration'
 require 'support/openssl_helpers'
@@ -12,7 +13,9 @@ describe CertificateSigner::CertificateAuthority do
 
   describe '::private_key' do
     it 'returns the private key for the certificate authority' do
-      CertificateSigner::CertificateAuthority.private_key.should == ca_private_key
+      private_key = CertificateSigner::CertificateAuthority.private_key
+      private_key.class.should be OpenSSL::PKey::RSA
+      private_key.to_s.should == ca_private_key.to_s
     end
   end
 end
