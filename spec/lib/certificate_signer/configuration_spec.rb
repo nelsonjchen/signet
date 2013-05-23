@@ -8,14 +8,20 @@ describe CertificateSigner::Configuration do
   end
 
   def with_rack_env(temporary_env)
-    original_env = ENV['RACK_ENV']
-    ENV['RACK_ENV'] = temporary_env
+    ENV.stub(:[]).with('RACK_ENV').and_return temporary_env
     yield
-    ENV['RACK_ENV'] = original_env
+    ENV.rspec_reset
   end
 
   def expected_config_path(env)
     File.expand_path("#{File.dirname(__FILE__)}../../../../config/#{env}.yml")
+  end
+
+
+  def reset_configuration_class_variables
+    [ :@@config, :@@config_path ].each do |var|
+      CertificateSigner::Configuration.class_variable_set var, nil
+    end
   end
 
   describe '#environment' do
@@ -37,9 +43,7 @@ describe CertificateSigner::Configuration do
 
   describe '#config_path' do
 
-    before(:each) do
-      CertificateSigner::Configuration.class_variable_set :@@config_path, nil
-    end
+    around(:each) { reset_configuration_class_variables }
 
     it 'returns the path to the configuration file' do
       env = 'derp'
@@ -52,9 +56,8 @@ describe CertificateSigner::Configuration do
 
   describe '#config' do
 
-    before(:each) do
-      CertificateSigner::Configuration.class_variable_set :@@config, nil
-      CertificateSigner::Configuration.class_variable_set :@@config_path, nil
+    around(:each) do
+      reset_configuration_class_variables
       YAML.rspec_reset
     end
 
