@@ -50,9 +50,9 @@ module TaskHelper
     include CertificateSigner::Configuration
 
     SSL_DIR             = "ssl/#{environment}"
-    CA_KEY_FILE         = "#{SSL_DIR}/ca_private_key.pem"
+    KEY_FILE            = "#{SSL_DIR}/ca_private_key.pem"
     CA_CERTIFICATE_FILE = "#{SSL_DIR}/ca_certificate.pem"
-    CA_KEY_PASSPHRASE   = config['certificate_authority']['passphrase']
+    KEY_PASSPHRASE      = config['certificate_authority']['passphrase']
 
     def self.ca
       new.setup
@@ -64,26 +64,43 @@ module TaskHelper
     end
 
     def make_private_key
-      File.open CA_KEY_FILE, 'w' do |file|
-        file.write ca_key.to_pem(OpenSSL::Cipher.new('AES-128-CBC'), CA_KEY_PASSPHRASE)
+      File.open KEY_FILE, 'w' do |file|
+        file.write key.to_pem(OpenSSL::Cipher.new('AES-128-CBC'), KEY_PASSPHRASE)
       end
     end
 
     def make_certificate
-      cert = OpenSSL::X509::Certificate.new
+      cert            = OpenSSL::X509::Certificate.new
+      subject         = OpenSSL::X509::Name.new(config['certificate_authority']['subject'].to_a)
+      cert.subject    = subject
+      cert.issuer     = subject
+      cert.version    = config['certificate_authority']['version']
+      cert.serial     = config['certificate_authority']['serial']
       cert.not_before = Time.now
       cert.not_after  = Time.now + config['certificate_authority']['expiry_seconds']
-      cert.subject    = OpenSSL::X509::Name.new(config['certificate_authority']['subject'].to_a)
-      cert.serial     = config['certificate_authority']['serial']
-      cert.public_key = ca_key.public_key
+      cert.public_key = key.public_key
+
+      extension_factory = OpenSSL::X509::ExtensionFactory.new
+      extension_factory.subject_certificate = cert
+      extension_factory.issuer_certificate  = cert
+
+      [
+        [ 'subjectKeyIdentifier', 'hash' ],
+        [ 'basicConstraints', 'CA:TRUE', true ],
+        [ 'keyUsage', 'cRLSign,keyCertSign', true ],
+      ].each do |extension|
+        cert.add_extension extension_factory.create_extension(extension)
+      end
+
+      cert.sign key, OpenSSL::Digest::SHA1.new
 
       File.open CA_CERTIFICATE_FILE, 'w' do |file|
         file.write cert.to_pem
       end
     end
 
-    def ca_key
-      @ca_key ||= OpenSSL::PKey::RSA.new(2048)
+    def key
+      @key ||= OpenSSL::PKey::RSA.new(2048)
     end
   end
 end

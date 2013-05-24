@@ -13,3 +13,4 @@ certificate_authority:
     OU: Engineering
   expiry_seconds: 3.15569e+8 # 10 years in seconds
   serial: 1
+  version: 2
