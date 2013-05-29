@@ -15,6 +15,9 @@ module CertificateSigner
   # instance methods because state helps us cache and what-not, and it's much
   # easier to test.
   #
+  # While the implementation does maintain state, any method can be called in
+  # any order, and will ensure that the proper state is set up as needed.
+  #
   class CertificateAuthority
 
     include CertificateSigner::Configuration
@@ -25,7 +28,15 @@ module CertificateSigner
     end
 
     def private_key
-      OpenSSL::PKey::RSA.new(File.read(private_key_path), config['certificate_authority']['passphrase'])
+      @@private_key ||= OpenSSL::PKey::RSA.new(File.read(private_key_path), config['certificate_authority']['passphrase'])
+    end
+
+    def certificate
+      @@certificate ||= OpenSSL::X509::Certificate.new(File.read(certificate_path))
+    end
+
+    def public_key
+      @@public_key  ||= private_key.public_key
     end
 
     private
@@ -36,6 +47,10 @@ module CertificateSigner
 
     def ssl_prefix
       File.expand_path("#{File.dirname(__FILE__)}/../../ssl")
+    end
+
+    def certificate_path
+      "#{ssl_prefix}/#{environment}/ca_certificate.pem"
     end
   end
 end
