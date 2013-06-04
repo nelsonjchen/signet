@@ -56,12 +56,12 @@ describe CertificateSigner::Configuration do
 
   describe '#config' do
 
-    around(:each) do
+    around :each do |example|
       reset_configuration_class_variables
       YAML.rspec_reset
+      example.run
+      YAML.rspec_reset
     end
-
-    after(:all) { YAML.rspec_reset }
 
     it 'loads the appropriate YAML file for the environment' do
       env = 'derp'

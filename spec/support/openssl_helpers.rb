@@ -5,12 +5,14 @@ module OpenSSLHelpers
 
   include CertificateSigner::Configuration
 
-  def valid_csr(name="#{subject}#{Time.now.to_i.to_s}")
+  def valid_csr(name="#{subject.class}-#{Time.now.to_i}")
+    @name = name
+
     csr = OpenSSL::X509::Request.new
     key = OpenSSL::PKey::RSA.new(2048)
 
     csr.public_key = key.public_key
-    csr.subject    = OpenSSL::X509::Name.parse "CN=#{name}/DC=features"
+    csr.subject    = csr_subject
     csr.version    = 0
 
     csr.sign key, OpenSSL::Digest::SHA1.new
@@ -40,5 +42,11 @@ module OpenSSLHelpers
 
   def ca_certificate_path
     "#{ssl_prefix}/#{environment}/ca_certificate.pem"
+  end
+
+  def csr_subject
+    OpenSSL::X509::Name.new(
+      config['certificate_authority']['subject'].merge({'CN' => @name}).to_a
+    )
   end
 end

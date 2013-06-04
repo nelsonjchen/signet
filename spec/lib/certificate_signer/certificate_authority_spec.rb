@@ -39,4 +39,27 @@ describe CertificateSigner::CertificateAuthority do
       end
     end
   end
+
+  describe '::sign' do
+
+    it 'accepts a valid certificate signing request' do
+      expect { CertificateSigner::CertificateAuthority.sign valid_csr }.to_not raise_error
+    end
+
+    it 'raises an ArgumentError if no csr_string is set' do
+      expect { CertificateSigner::CertificateAuthority.sign }.to raise_error ArgumentError
+    end
+
+    it 'raises a RequestError if the csr_string is not a CSR' do
+      expect {
+        CertificateSigner::CertificateAuthority.sign 'not a csr'
+      }.to raise_error ArgumentError
+    end
+
+    it 'signs a valid certificate request' do
+      cert = CertificateSigner::CertificateAuthority.sign valid_csr
+      pending
+      expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
+    end
+  end
 end
