@@ -12,7 +12,7 @@ module CertificateSigner
 
     post '/csr' do
       begin
-        CertificateAuthority.sign params[:csr]
+        CertificateAuthority.sign(params[:csr]).to_pem
       rescue ArgumentError
         halt_with :bad_request
       end

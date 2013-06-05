@@ -39,9 +39,7 @@ module CertificateSigner
       cert.public_key = csr.public_key
 
       cert.sign private_key, OpenSSL::Digest::SHA1.new
-      cert.to_pem
     end
-
 
     def private_key
       @@private_key ||= OpenSSL::PKey::RSA.new(File.read(private_key_path), config['certificate_authority']['passphrase'])

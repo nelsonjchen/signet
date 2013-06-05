@@ -1,81 +1,92 @@
 require 'spec_helper'
 require 'certificate_signer/configuration'
 
+FAKE_CONFIG = {}
+
 describe CertificateSigner::Configuration do
 
-  def in_new_class(&block)
-    Class.new { include CertificateSigner::Configuration }.new.instance_eval(&block)
+  def new_class
+    Class.new { include CertificateSigner::Configuration }
   end
 
-  def with_rack_env(temporary_env)
-    ENV.stub(:[]).with('RACK_ENV').and_return temporary_env
-    yield
-    ENV.rspec_reset
+  def in_new_class(&block)
+    new_class.new.instance_eval(&block)
+  end
+
+  def unset_config
+    CertificateSigner::Configuration.class_variable_set :@@config, nil
   end
 
   def expected_config_path(env)
     File.expand_path("#{File.dirname(__FILE__)}../../../../config/#{env}.yml")
   end
 
+  def with_env(env, &block)
+    original_env = ENV['RACK_ENV']
+    ENV['RACK_ENV'] = env
+    yield
+    ENV['RACK_ENV'] = original_env
+  end
 
-  def reset_configuration_class_variables
-    [ :@@config, :@@config_path ].each do |var|
-      CertificateSigner::Configuration.class_variable_set var, nil
+  around :each do |example|
+    reset = -> do
+      unset_config
+      begin
+        YAML.rspec_reset
+      rescue NoMethodError
+        # FIXME Ignore that! It can happen with random test ordering. Still, I'd
+        # rather write the specs so this stops happening than hack around it.
+      end
     end
+    reset.call
+    example.run
+    reset.call
+  end
+
+  describe '#config' do
+
+    it 'returns the configuration as a Hash' do
+      new_class.new.config.should be_a Hash
+    end
+
+    it 'loads the configuration for the current environment' do
+      object      = new_class.new
+      environment = object.environment
+      config_path = object.send(:config_path)
+
+      config_path.should match "config/#{environment}.yml"
+      YAML.should_receive(:load_file).with(config_path)
+
+      object.config
+    end
+
+    it 'only loads the config once for all instances of all classes' do
+      YAML.should_receive(:load_file).once.and_return FAKE_CONFIG
+      3.times do
+        in_new_class do
+          3.times { config }
+        end
+      end
+    end
+
   end
 
   describe '#environment' do
 
-    it "gets the value of ENV['RACK_ENV']" do
-      with_rack_env('derp') do
-        in_new_class { environment.should == 'derp' }
-      end
-    end
-
-    it "raises an error if ENV['RACK_ENV'] is not defined" do
-      with_rack_env(nil) do
-        expect {
-          in_new_class { environment }
-        }.to raise_error ArgumentError, "ENV['RACK_ENV'] must be defined"
+    it 'returns the environment (e.g. test, development, production)' do
+      %w[ test development production ].each do |env|
+        with_env env do
+          new_class.new.environment.should == env
+        end
       end
     end
   end
 
   describe '#config_path' do
 
-    around(:each) { reset_configuration_class_variables }
-
-    it 'returns the path to the configuration file' do
-      env = 'derp'
-      expected_config_path = expected_config_path(env)
-      with_rack_env(env) do
-        in_new_class { config_path.should == expected_config_path }
-      end
-    end
-  end
-
-  describe '#config' do
-
-    around :each do |example|
-      reset_configuration_class_variables
-      YAML.rspec_reset
-      example.run
-      YAML.rspec_reset
-    end
-
-    it 'loads the appropriate YAML file for the environment' do
-      env = 'derp'
-      expected_config_path = expected_config_path(env)
-      with_rack_env(env) do
-        YAML.should_receive(:load_file).with expected_config_path
-        in_new_class { config }
-      end
-    end
-
-    it 'only loads once' do
-      YAML.stub(:load_file).and_return({})
-      YAML.should_receive(:load_file).once
-      10.times { in_new_class { config } }
+    it 'matches the current environment' do
+      object = new_class.new
+      object.send(:config_path).should match "config/#{object.environment}.yml"
     end
   end
 end
