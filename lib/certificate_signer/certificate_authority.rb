@@ -34,6 +34,14 @@ module CertificateSigner
       raise ArgumentError if csr.nil?
       raise ArgumentError unless csr.is_a? OpenSSL::X509::Request
 
+      ##########################################################################
+      #
+      #                          TODO Start here.
+      #
+      # http://www.ruby-doc.org/stdlib-2.0/libdoc/openssl/rdoc/OpenSSL.html#label-Signing+a+Certificate
+      #
+      ##########################################################################
+      #
       cert            = OpenSSL::X509::Certificate.new
       cert.subject    = csr.subject
       cert.public_key = csr.public_key
