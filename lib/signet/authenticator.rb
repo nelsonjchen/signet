@@ -1,6 +1,6 @@
-require 'certificate_signer/user'
+require 'signet/user'
 
-module CertificateSigner
+module Signet
   class Authenticator
 
     def self.valid_identity_key?(identity_key)

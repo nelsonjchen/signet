@@ -1,10 +1,10 @@
 require 'spec_helper'
-require 'certificate_signer/active_record_connection'
+require 'signet/active_record_connection'
 
-describe CertificateSigner::ActiveRecordConnection do
+describe Signet::ActiveRecordConnection do
 
   def new_class_with_connection
-    Class.new { include CertificateSigner::ActiveRecordConnection }
+    Class.new { include Signet::ActiveRecordConnection }
   end
 
   def in_new_class_with_connection(&block)

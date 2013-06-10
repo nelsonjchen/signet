@@ -1,19 +1,19 @@
 require 'spec_helper'
-require 'certificate_signer/certificate_authority'
-require 'certificate_signer/configuration'
+require 'signet/certificate_authority'
+require 'signet/configuration'
 require 'support/openssl_helpers'
 
-describe CertificateSigner::CertificateAuthority do
+describe Signet::CertificateAuthority do
 
   include OpenSSLHelpers
 
   it 'should have access to common configuration' do
-    CertificateSigner::CertificateAuthority.ancestors.should include CertificateSigner::Configuration
+    Signet::CertificateAuthority.ancestors.should include Signet::Configuration
   end
 
   it 'should be able to verify its certificate with its public key' do
-    CertificateSigner::CertificateAuthority.certificate.verify(
-      CertificateSigner::CertificateAuthority.public_key
+    Signet::CertificateAuthority.certificate.verify(
+      Signet::CertificateAuthority.public_key
     ).should be true
   end
 
@@ -25,15 +25,15 @@ describe CertificateSigner::CertificateAuthority do
         File.should_receive(:read).once.and_return(instance_variable_get("@#{method}")) # e.g. ...and_return(@public_key)
         3.times do
           Class.new do
-            3.times { CertificateSigner::CertificateAuthority.send(method) } # e.g. CertificateSigner::CertificateAuthority.public_key
+            3.times { Signet::CertificateAuthority.send(method) } # e.g. Signet::CertificateAuthority.public_key
           end
         end
         File.rspec_reset
       end
 
       it "returns the #{method} for the certificate authority" do
-        result    = CertificateSigner::CertificateAuthority.send(method) # e.g. CertificateSigner::CertificateAuthority.public_key
-        reference = send("ca_#{method}")                                 # e.g. ca_public_key (defined in OpenSSLHelpers)
+        result    = Signet::CertificateAuthority.send(method) # e.g. Signet::CertificateAuthority.public_key
+        reference = send("ca_#{method}")                      # e.g. ca_public_key (defined in OpenSSLHelpers)
         result.should be_a reference.class
         result.to_s.should == reference.to_s
       end
@@ -43,21 +43,21 @@ describe CertificateSigner::CertificateAuthority do
   describe '::sign' do
 
     it 'accepts a valid certificate signing request' do
-      expect { CertificateSigner::CertificateAuthority.sign valid_csr }.to_not raise_error
+      expect { Signet::CertificateAuthority.sign valid_csr }.to_not raise_error
     end
 
     it 'raises an ArgumentError if no csr_string is set' do
-      expect { CertificateSigner::CertificateAuthority.sign }.to raise_error ArgumentError
+      expect { Signet::CertificateAuthority.sign }.to raise_error ArgumentError
     end
 
     it 'raises a RequestError if the csr_string is not a CSR' do
       expect {
-        CertificateSigner::CertificateAuthority.sign 'not a csr'
+        Signet::CertificateAuthority.sign 'not a csr'
       }.to raise_error ArgumentError
     end
 
     it 'signs a valid certificate request' do
-      cert = CertificateSigner::CertificateAuthority.sign valid_csr
+      cert = Signet::CertificateAuthority.sign valid_csr
       pending
       expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
     end

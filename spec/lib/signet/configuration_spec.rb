@@ -1,12 +1,12 @@
 require 'spec_helper'
-require 'certificate_signer/configuration'
+require 'signet/configuration'
 
 FAKE_CONFIG = {}
 
-describe CertificateSigner::Configuration do
+describe Signet::Configuration do
 
   def new_class
-    Class.new { include CertificateSigner::Configuration }
+    Class.new { include Signet::Configuration }
   end
 
   def in_new_class(&block)
@@ -14,7 +14,7 @@ describe CertificateSigner::Configuration do
   end
 
   def unset_config
-    CertificateSigner::Configuration.class_variable_set :@@config, nil
+    Signet::Configuration.class_variable_set :@@config, nil
   end
 
   def expected_config_path(env)

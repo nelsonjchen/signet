@@ -1,8 +1,8 @@
 require 'sinatra/base'
-require 'certificate_signer/authenticator'
-require 'certificate_signer/certificate_authority'
+require 'signet/authenticator'
+require 'signet/certificate_authority'
 
-module CertificateSigner
+module Signet
   class HTTPServer < Sinatra::Base
 
     before do

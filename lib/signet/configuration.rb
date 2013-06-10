@@ -1,6 +1,6 @@
 require 'yaml'
 
-module CertificateSigner
+module Signet
   module Configuration
 
     def config

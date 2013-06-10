@@ -1,7 +1,7 @@
-require 'certificate_signer/configuration'
+require 'signet/configuration'
 require 'openssl'
 
-module CertificateSigner
+module Signet
 
   ##
   # As far as this app is concerned, there is only one CertificateAuthority in
@@ -20,7 +20,7 @@ module CertificateSigner
   #
   class CertificateAuthority
 
-    include CertificateSigner::Configuration
+    include Signet::Configuration
 
     def self.method_missing(meth, *args, &block)
       @@ca ||= new

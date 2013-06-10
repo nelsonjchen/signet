@@ -1,9 +1,9 @@
-require 'certificate_signer/configuration'
+require 'signet/configuration'
 require 'openssl'
 
 module OpenSSLHelpers
 
-  include CertificateSigner::Configuration
+  include Signet::Configuration
 
   def valid_csr(name="#{subject.class}-#{Time.now.to_i}")
     @name = name

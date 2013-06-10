@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'support/http_helpers'
 require 'support/openssl_helpers'
-require 'certificate_signer/http_server'
+require 'signet/http_server'
 
-describe CertificateSigner::HTTPServer do
+describe Signet::HTTPServer do
 
   include HTTPHelpers
 

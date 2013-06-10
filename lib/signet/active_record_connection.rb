@@ -1,7 +1,7 @@
 require 'active_record'
-require 'certificate_signer/configuration'
+require 'signet/configuration'
 
-module CertificateSigner
+module Signet
   module ActiveRecordConnection
     extend Configuration
     ActiveRecord::Base.establish_connection config['database']

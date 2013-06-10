@@ -1,11 +1,11 @@
 $: << 'lib'
 
 require 'active_record'
-require 'certificate_signer/configuration'
+require 'signet/configuration'
 require 'openssl'
 require 'rspec/core/rake_task'
 
-include CertificateSigner::Configuration
+include Signet::Configuration
 
 ENV['RACK_ENV'] ||= 'development'
 
@@ -47,7 +47,7 @@ private
 module TaskHelper
   class SSL
 
-    include CertificateSigner::Configuration
+    include Signet::Configuration
 
     SSL_DIR             = "ssl/#{environment}"
     KEY_FILE            = "#{SSL_DIR}/ca_private_key.pem"

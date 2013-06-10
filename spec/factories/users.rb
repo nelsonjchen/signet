@@ -1,10 +1,10 @@
-require 'certificate_signer/user'
+require 'signet/user'
 require 'digest/md5'
 
 FactoryGirl.define do
-  factory :user, class: CertificateSigner::User do
+  factory :user, class: Signet::User do
     initialize_with do
-      CertificateSigner::User.find_or_create_by_identity_key Digest::MD5.hexdigest('VALID_KEY')
+      Signet::User.find_or_create_by_identity_key Digest::MD5.hexdigest('VALID_KEY')
     end
   end
 end
