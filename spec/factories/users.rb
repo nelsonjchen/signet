@@ -1,5 +1,5 @@
-require 'signet/user'
 require 'digest/md5'
+require 'signet/user'
 
 FactoryGirl.define do
   factory :user, class: Signet::User do

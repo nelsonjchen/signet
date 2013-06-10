@@ -1,5 +1,6 @@
-require 'signet/configuration'
 require 'openssl'
+require 'securerandom'
+require 'signet/configuration'
 
 module Signet
 

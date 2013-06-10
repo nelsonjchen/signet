@@ -1,5 +1,5 @@
-require 'signet/configuration'
 require 'openssl'
+require 'signet/configuration'
 
 module OpenSSLHelpers
 

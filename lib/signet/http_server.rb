@@ -1,6 +1,6 @@
-require 'sinatra/base'
 require 'signet/authenticator'
 require 'signet/certificate_authority'
+require 'sinatra/base'
 
 module Signet
   class HTTPServer < Sinatra::Base

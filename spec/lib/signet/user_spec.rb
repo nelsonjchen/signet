@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'signet/user'
 require 'signet/active_record_connection'
+require 'signet/user'
 
 describe Signet::User do
   context 'class ancestors' do

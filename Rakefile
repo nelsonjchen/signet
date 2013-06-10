@@ -1,9 +1,9 @@
 $: << 'lib'
 
 require 'active_record'
-require 'signet/configuration'
 require 'openssl'
 require 'rspec/core/rake_task'
+require 'signet/configuration'
 
 include Signet::Configuration
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
+require 'signet/http_server'
 require 'support/http_helpers'
 require 'support/openssl_helpers'
-require 'signet/http_server'
 
 describe Signet::HTTPServer do
 
