@@ -40,8 +40,12 @@ describe Signet::HTTPServer do
     last_response.status.should == status_code(:bad_request)
   end
 
+  it 'returns 400 BAD REQUEST when the certificate signing request is malformed' do
+    csr_post 'csr' => 'bad CSR!'
+    last_response.status.should == status_code(:bad_request)
+  end
+
   it 'generates a certificate for a valid certificate signing request' do
-    pending
     csr_post
     expect {
       OpenSSL::X509::Certificate.new(last_response.body)

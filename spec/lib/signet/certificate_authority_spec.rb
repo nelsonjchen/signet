@@ -58,7 +58,6 @@ describe Signet::CertificateAuthority do
 
     it 'signs a valid certificate request' do
       cert = Signet::CertificateAuthority.sign valid_csr
-      pending
       expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
     end
   end

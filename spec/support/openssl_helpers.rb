@@ -13,7 +13,7 @@ module OpenSSLHelpers
 
     csr.public_key = key.public_key
     csr.subject    = csr_subject
-    csr.version    = 0
+    csr.version    = 2
 
     csr.sign key, OpenSSL::Digest::SHA1.new
   end

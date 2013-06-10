@@ -35,17 +35,14 @@ module Signet
       raise ArgumentError if csr.nil?
       raise ArgumentError unless csr.is_a? OpenSSL::X509::Request
 
-      ##########################################################################
-      #
-      #                          TODO Start here.
-      #
-      # http://www.ruby-doc.org/stdlib-2.0/libdoc/openssl/rdoc/OpenSSL.html#label-Signing+a+Certificate
-      #
-      ##########################################################################
-      #
+      now = Time.now
+
       cert            = OpenSSL::X509::Certificate.new
       cert.subject    = csr.subject
       cert.public_key = csr.public_key
+      cert.serial     = serial
+      cert.not_before = now
+      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
 
       cert.sign private_key, OpenSSL::Digest::SHA1.new
     end
@@ -74,6 +71,13 @@ module Signet
 
     def certificate_path
       "#{ssl_prefix}/#{environment}/ca_certificate.pem"
+    end
+
+    ##
+    # A reasonably unique integer for use as a serial number
+    #
+    def serial
+      SecureRandom.uuid.gsub(/-/, '').hex
     end
   end
 end
