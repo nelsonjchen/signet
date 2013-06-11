@@ -14,4 +14,4 @@ certificate_authority:
   email: licensing@example.com
   expiry_seconds: 3.15569e+8 # 10 years in seconds
   serial: 1
-  version: 2
+  version: 2 # this means version 3--X.509 certificate versions are 0-indexed. >_<

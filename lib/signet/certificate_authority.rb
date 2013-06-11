@@ -41,10 +41,18 @@ module Signet
       cert.subject    = csr.subject
       cert.public_key = csr.public_key
       cert.serial     = serial
+      cert.version    = config['certificate_authority']['version']
       cert.not_before = now
       cert.not_after  = now + config['certificate_authority']['expiry_seconds']
 
       cert.sign private_key, OpenSSL::Digest::SHA1.new
+    end
+
+    ##
+    # Verifies that the certificate was signed by this certificate authority
+    #
+    def verify?(cert)
+      cert.verify public_key
     end
 
     def private_key

@@ -60,5 +60,21 @@ describe Signet::CertificateAuthority do
       cert = Signet::CertificateAuthority.sign valid_csr
       expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
     end
+
+    it 'creates certificates with the version from the configuration file' do
+      Signet::CertificateAuthority.sign(valid_csr).version.should == config['certificate_authority']['version']
+    end
+  end
+
+  describe '::verify?' do
+
+    it "verifies that certificates signed by this CA have been signed by this CA" do
+      valid_cert = Signet::CertificateAuthority.sign valid_csr
+      Signet::CertificateAuthority.verify?(valid_cert).should be true
+    end
+
+    it "verifies that other certificates were not signed by this CA" do
+      Signet::CertificateAuthority.verify?(some_other_cert).should be false
+    end
   end
 end
