@@ -32,20 +32,8 @@ module Signet
     # Signs and returns the CSR
     #
     def sign(csr)
-      raise ArgumentError if csr.nil?
-      raise ArgumentError unless csr.is_a? OpenSSL::X509::Request
-
-      now = Time.now
-
-      cert            = OpenSSL::X509::Certificate.new
-      cert.subject    = csr.subject
-      cert.public_key = csr.public_key
-      cert.serial     = serial
-      cert.version    = config['certificate_authority']['version']
-      cert.not_before = now
-      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
-
-      cert.sign private_key, OpenSSL::Digest::SHA1.new
+      raise ArgumentError if csr.nil? or !csr.is_a?(OpenSSL::X509::Request)
+      certificate_for(csr).sign private_key, OpenSSL::Digest::SHA1.new
     end
 
     ##
@@ -82,10 +70,25 @@ module Signet
     end
 
     ##
-    # A reasonably unique integer for use as a serial number
+    # Returns a reasonably unique integer for use as a serial number
     #
     def serial
       SecureRandom.uuid.gsub(/-/, '').hex
+    end
+
+    ##
+    # Creates a new certificate for the given CSR
+    #
+    def certificate_for(csr)
+      OpenSSL::X509::Certificate.new.tap do |cert|
+        now             = Time.now
+        cert.subject    = csr.subject
+        cert.public_key = csr.public_key
+        cert.serial     = serial
+        cert.version    = config['certificate_authority']['version']
+        cert.not_before = now
+        cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+      end
     end
   end
 end
