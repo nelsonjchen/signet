@@ -11,10 +11,10 @@ module Signet
   # Math.log. Therefore, we pass calls to missing class methods on to a
   # class-wide instance so we can use this like a library, i.e.
   # CertificateAuthority.private_key instead of
-  # CertificateAuthority.new.private_key. Both usages are valid, so use
-  # whichever one makes sense in your context. All methods are implemented as
-  # instance methods because state helps us cache and what-not, and it's much
-  # easier to test.
+  # CertificateAuthority.new.private_key. Both usages will work, but the terser
+  # form is more correct, so use it. All methods are implemented as instance
+  # methods because state helps us cache and what-not, and it's much easier to
+  # test.
   #
   # While the implementation does maintain state, any method can be called in
   # any order, and will ensure that the proper state is set up as needed.
@@ -52,21 +52,21 @@ module Signet
     end
 
     def public_key
-      @@public_key  ||= private_key.public_key
+      @@public_key ||= private_key.public_key
     end
 
     private
 
     def private_key_path
-      "#{ssl_prefix}/#{environment}/ca_private_key.pem"
+      @@private_key_path ||= "#{ssl_prefix}/#{environment}/ca_private_key.pem"
     end
 
     def ssl_prefix
-      File.expand_path("#{File.dirname(__FILE__)}/../../ssl")
+      @@ssl_prefix ||= File.expand_path("#{File.dirname(__FILE__)}/../../ssl")
     end
 
     def certificate_path
-      "#{ssl_prefix}/#{environment}/ca_certificate.pem"
+      @@certificate_path ||= "#{ssl_prefix}/#{environment}/ca_certificate.pem"
     end
 
     ##
