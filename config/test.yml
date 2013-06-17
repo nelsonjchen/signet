@@ -12,6 +12,10 @@ certificate_authority:
     O: example.com
     OU: Engineering
   email: licensing@example.com
-  expiry_seconds: 3.15569e+8 # 10 years in seconds
+  expiry_seconds: 3.15569e+8 # ~10 years in seconds
   serial: 1
   version: 2 # this means version 3--X.509 certificate versions are 0-indexed. >_<
+client:
+  identity_key: '70257366ab3bad7832e3b69d5e9b640e' # MD5 sum of the string "REAL ULTIMATE POWER"
+  server: http://localhost:4567 # Sinatra port is used in testing
+  name: Signet Test Client

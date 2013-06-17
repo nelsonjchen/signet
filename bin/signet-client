@@ -2,6 +2,6 @@
 
 $: << 'lib'
 
-require 'signet/client_cli'
+require 'signet/client'
 
-Signet::ClientCLI.run
+Signet::Client.run

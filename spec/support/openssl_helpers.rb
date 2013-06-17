@@ -5,7 +5,7 @@ module OpenSSLHelpers
 
   include Signet::Configuration
 
-  def valid_csr(name="#{subject.class}-#{Time.now.to_i}")
+  def valid_csr(name=default_name)
     @name = name
 
     csr = OpenSSL::X509::Request.new
@@ -16,6 +16,20 @@ module OpenSSLHelpers
     csr.version    = config['certificate_authority']['version']
 
     csr.sign key, OpenSSL::Digest::SHA1.new
+  end
+
+  def valid_certificate(name=default_name)
+    csr = valid_csr(name)
+    OpenSSL::X509::Certificate.new.tap do |cert|
+      now             = Time.now
+      cert.subject    = csr.subject
+      cert.public_key = csr.public_key
+      cert.serial     = cert_serial
+      cert.version    = config['certificate_authority']['version']
+      cert.not_before = now
+      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+      cert.sign ca_private_key, OpenSSL::Digest::SHA1.new
+    end
   end
 
   def ca_private_key
@@ -50,6 +64,10 @@ module OpenSSLHelpers
 
   private
 
+  def default_name
+    "#{subject.class}-#{Time.now.to_i}"
+  end
+
   def ca_private_key_path
     "#{ssl_prefix}/#{environment}/ca_private_key.pem"
   end
@@ -66,5 +84,12 @@ module OpenSSLHelpers
     OpenSSL::X509::Name.new(
       config['certificate_authority']['subject'].merge({'CN' => @name}).to_a
     )
+  end
+
+  ##
+  # Returns a reasonably unique integer for use as a serial number
+  #
+  def cert_serial
+    SecureRandom.uuid.gsub(/-/, '').hex
   end
 end
