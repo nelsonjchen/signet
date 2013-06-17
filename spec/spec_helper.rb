@@ -13,6 +13,13 @@ require 'factory_girl'
 require 'find'
 require 'openssl'
 require 'rack/test'
+require 'signet/configuration'
+
+ENV['RACK_ENV'] = 'test'
+
+include Signet::Configuration
+
+CERTIFICATE_PATH = File.expand_path("#{__FILE__}../../../ssl/#{environment}/signed_certificate.pem")
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -21,8 +28,6 @@ RSpec.configure do |config|
   config.order = 'random'
   config.include Rack::Test::Methods
 end
-
-ENV['RACK_ENV'] = 'test'
 
 FactoryGirl.find_definitions
 

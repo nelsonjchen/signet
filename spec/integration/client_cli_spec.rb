@@ -5,8 +5,6 @@ require 'support/openssl_helpers'
 
 include Signet::Configuration
 
-CERTIFICATE_PATH = File.expand_path("#{__FILE__}../../../../ssl/#{environment}/signed_certificate.pem")
-
 describe 'Client CLI integration' do
 
   include OpenSSLHelpers
