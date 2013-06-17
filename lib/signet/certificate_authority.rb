@@ -55,6 +55,10 @@ module Signet
       @@public_key ||= private_key.public_key
     end
 
+    def subject
+      @@subject ||= certificate.subject
+    end
+
     private
 
     def private_key_path
@@ -85,9 +89,22 @@ module Signet
         cert.subject    = csr.subject
         cert.public_key = csr.public_key
         cert.serial     = serial
+        cert.issuer     = subject
         cert.version    = config['certificate_authority']['version']
         cert.not_before = now
         cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+
+        extension_factory = OpenSSL::X509::ExtensionFactory.new
+        extension_factory.subject_certificate = cert
+        extension_factory.issuer_certificate  = certificate
+
+        [
+          [ 'basicConstraints', 'CA:FALSE' ],
+          [ 'keyUsage', 'keyEncipherment,dataEncipherment,digitalSignature' ],
+          [ 'subjectKeyIdentifier', 'hash' ],
+        ].each do |extension|
+          cert.add_extension extension_factory.create_extension extension
+        end
       end
     end
   end
