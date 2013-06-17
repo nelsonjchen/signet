@@ -2,7 +2,6 @@ require 'signet/authenticator'
 require 'signet/certificate_authority'
 require 'signet/http_server_errors'
 require 'sinatra/base'
-require 'logger'
 
 module Signet
 

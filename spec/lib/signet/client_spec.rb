@@ -4,11 +4,10 @@ require 'signet/client'
 require 'signet/configuration'
 require 'support/openssl_helpers'
 
-include Signet::Configuration
-
 describe Signet::Client do
 
   include OpenSSLHelpers
+  include Signet::Configuration
 
   CERTIFICATE_PATH = File.expand_path("#{__FILE__}../../../../../ssl/#{environment}/signed_certificate.pem")
 

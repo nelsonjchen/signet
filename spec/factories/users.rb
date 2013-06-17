@@ -1,4 +1,3 @@
-require 'digest/md5'
 require 'signet/user'
 require 'signet/configuration'
 
