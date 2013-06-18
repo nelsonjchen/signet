@@ -43,14 +43,14 @@ describe Signet::CertificateAuthority do
   describe '::sign' do
 
     it 'accepts a valid certificate signing request' do
-      expect { Signet::CertificateAuthority.sign valid_csr }.to_not raise_error
+      expect { Signet::CertificateAuthority.sign valid_csr }.not_to raise_error
     end
 
-    it 'raises an ArgumentError if no csr_string is set' do
+    it 'raises an ArgumentError if no csr is set' do
       expect { Signet::CertificateAuthority.sign }.to raise_error ArgumentError
     end
 
-    it 'raises a RequestError if the csr_string is not a CSR' do
+    it 'raises a RequestError if the csr is not a CSR' do
       expect {
         Signet::CertificateAuthority.sign 'not a csr'
       }.to raise_error ArgumentError
@@ -58,7 +58,7 @@ describe Signet::CertificateAuthority do
 
     it 'signs a valid certificate request' do
       cert = Signet::CertificateAuthority.sign valid_csr
-      expect { OpenSSL::X509::Certificate.new(cert) }.to_not raise_error OpenSSL::X509::CertificateError
+      expect { OpenSSL::X509::Certificate.new(cert) }.not_to raise_error OpenSSL::X509::CertificateError
     end
 
     it 'creates certificates with the version from the configuration file' do

@@ -36,7 +36,7 @@ describe 'Client CLI integration' do
     it 'is a certificate' do
       expect {
         OpenSSL::X509::Certificate.new File.read(CERTIFICATE_PATH)
-      }.to_not raise_error OpenSSL::X509::CertificateError
+      }.not_to raise_error OpenSSL::X509::CertificateError
     end
 
     it 'is signed by the certificate authority' do

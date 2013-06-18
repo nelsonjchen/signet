@@ -49,6 +49,6 @@ describe Signet::HTTPServer do
     csr_post
     expect {
       OpenSSL::X509::Certificate.new(last_response.body)
-    }.to_not raise_error OpenSSL::X509::CertificateError
+    }.not_to raise_error OpenSSL::X509::CertificateError
   end
 end

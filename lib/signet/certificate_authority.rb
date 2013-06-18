@@ -44,7 +44,9 @@ module Signet
     end
 
     def private_key
-      @@private_key ||= OpenSSL::PKey::RSA.new(File.read(private_key_path), config['certificate_authority']['passphrase'])
+      @@private_key ||= OpenSSL::PKey::RSA.new(
+        File.read(private_key_path), config['certificate_authority']['passphrase']
+      )
     end
 
     def certificate

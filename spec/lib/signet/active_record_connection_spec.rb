@@ -15,7 +15,7 @@ describe Signet::ActiveRecordConnection do
     expect {
       new_class_with_connection
       ActiveRecord::Base.connection
-    }.to_not raise_error ActiveRecord::ConnectionNotEstablished
+    }.not_to raise_error ActiveRecord::ConnectionNotEstablished
   end
 
   context 'when included by many classes simultaneously' do

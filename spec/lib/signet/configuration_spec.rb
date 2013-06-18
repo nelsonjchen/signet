@@ -13,10 +13,6 @@ describe Signet::Configuration do
     new_class.new.instance_eval(&block)
   end
 
-  def unset_config
-    Signet::Configuration.class_variable_set :@@config, nil
-  end
-
   def expected_config_path(env)
     File.expand_path("#{File.dirname(__FILE__)}../../../../config/#{env}.yml")
   end
@@ -30,7 +26,7 @@ describe Signet::Configuration do
 
   around :each do |example|
     reset = -> do
-      unset_config
+      unset_configuration
       begin
         YAML.rspec_reset
       rescue NoMethodError
