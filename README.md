@@ -1,7 +1,8 @@
 Signet
 ======
 
-_Get your certificates signed with an HTTP API._
+_If you're havin' SSL problems, I feel bad for you, son. I got 99 problems, but
+a cert ain't one._
 
 [![Build Status](https://secure.travis-ci.org/SmartReceipt/signet.png)](https://travis-ci.org/SmartReceipt/signet)
 [![Coverage Status](https://coveralls.io/repos/SmartReceipt/signet/badge.png?branch=master)](https://coveralls.io/r/SmartReceipt/signet)
