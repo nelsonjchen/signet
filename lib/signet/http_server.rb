@@ -9,10 +9,7 @@ module Signet
 
     include HTTPServerErrors
 
-    before do
-      halt_with :no_auth  if params[:auth].nil?
-      halt_with :bad_auth unless Authenticator.valid_identity_key? params[:auth]
-    end
+    before { authenticate }
 
     post '/csr' do
       halt_with :no_csr if params[:csr].nil?
@@ -20,6 +17,11 @@ module Signet
     end
 
     private
+
+    def authenticate
+      halt_with :no_auth  if params[:auth].nil?
+      halt_with :bad_auth unless Authenticator.valid_identity_key? params[:auth]
+    end
 
     def halt_with(error)
       status, message = ERRORS[error][:status], ERRORS[error][:message]
