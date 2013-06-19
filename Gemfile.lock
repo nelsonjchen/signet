@@ -109,7 +109,7 @@ DEPENDENCIES
   factory_girl
   guard
   guard-rspec
-  json (~> 1.7)
+  json
   pg
   rake
   rspec
