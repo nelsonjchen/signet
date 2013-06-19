@@ -28,10 +28,10 @@ cd signet
 bundle
 ```
 
-* Edit `config/production.yml`
+* Create `config/production.yml` (see **Configuration File** below for help).
 * Add your CA certificate and private key to ssl/production as
     * `ssl/production/ca_certificate.pem` and
-    * `ssl/production/ca_private_key.pem`
+    * `ssl/production/ca_private_key.pem`.
 
 The HTTP server is implemented as a [Sinatra][] app, so you just
 start it up like any Rack app.
@@ -50,7 +50,7 @@ cd signet
 bundle
 ```
 
-Edit config/production.yml
+Create `config/production.yml` (see **Configuration File** below for help).
 
 ```sh
 RACK_ENV=production bin/signet-client
