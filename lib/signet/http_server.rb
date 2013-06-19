@@ -9,10 +9,6 @@ module Signet
 
     include HTTPServerErrors
 
-    configure do
-      enable :logging
-    end
-
     before do
       halt_with :no_auth  if params[:auth].nil?
       halt_with :bad_auth unless Authenticator.valid_identity_key? params[:auth]

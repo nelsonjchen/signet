@@ -4,21 +4,18 @@ require 'signet/http_server'
 require 'support/openssl_helpers'
 require 'timeout'
 
-
 describe 'Client CLI integration' do
 
   include OpenSSLHelpers
-  include Signet::Configuration
+  extend Signet::Configuration
 
-  let :uri do
-    URI(config['client']['server'])
+  def uri
+    @uri ||= URI(config['client']['server'])
   end
 
   def server_up?
     begin
-      Net::HTTP.start(uri.host, uri.port) do |http|
-        http.get '/'
-      end
+      Net::HTTP.start uri.host, uri.port { |http| http.get '/' }
     rescue Errno::ECONNREFUSED
       return false
     end
@@ -28,18 +25,17 @@ describe 'Client CLI integration' do
   before :all do
     FileUtils.rm_f CERTIFICATE_PATH
     begin
-      $stderr = StringIO.new # suppress logging from HTTPServer
-      thread = Thread.new do
-        Signet::HTTPServer.run!
+      pid = fork do
+        Rack::Server.start \
+          app:       Signet::HTTPServer,
+          Port:      uri.port,
+          AccessLog: [],
+          Logger:    SilentLogger.new
       end
-      Timeout.timeout(60) do
-        thread.join(0.1) until server_up?
-      end
-
+      Timeout.timeout(60) { sleep 0.1 until server_up? }
       `bin/signet-client`
     ensure
-      thread.exit
-      $stderr = STDERR
+      Process.kill 'KILL', pid
     end
   end
 

@@ -13,8 +13,8 @@ require 'factory_girl'
 require 'find'
 require 'openssl'
 require 'rack/test'
-require 'signet/configuration'
 require 'signet/certificate_authority'
+require 'signet/configuration'
 
 ENV['RACK_ENV'] = 'test'
 include Signet::Configuration
@@ -42,6 +42,13 @@ Install production CA certificate,  private key, and config to
         - #{PRODUCTION_CONFIG_PATH}
       to run these tests
 PENDING
+
+##
+# A SilentLogger acts like a Logger but does nothing.
+#
+class SilentLogger
+  def method_missing(meth, *args, &block); end
+end
 
 def valid_user
   @valid_user ||= FactoryGirl.build(:user)
