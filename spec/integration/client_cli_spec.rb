@@ -4,11 +4,11 @@ require 'signet/http_server'
 require 'support/openssl_helpers'
 require 'timeout'
 
-include Signet::Configuration
 
 describe 'Client CLI integration' do
 
   include OpenSSLHelpers
+  include Signet::Configuration
 
   let :uri do
     URI(config['client']['server'])
