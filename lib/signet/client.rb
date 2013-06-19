@@ -34,7 +34,7 @@ module Signet
     end
 
     def certificate_signing_request
-      @@certificate_signing_request ||= -> do
+      @certificate_signing_request ||= -> do
         csr = OpenSSL::X509::Request.new
 
         csr = OpenSSL::X509::Request.new
@@ -48,11 +48,11 @@ module Signet
     end
 
     def post_uri
-      @@post_uri ||= URI.parse "#{config['client']['server']}/csr"
+      @post_uri ||= URI.parse "#{config['client']['server']}/csr"
     end
 
     def certificate_path
-      @@certificate_path ||= File.expand_path("#{__FILE__}../../../../ssl/#{environment}/signed_certificate.pem")
+      @certificate_path ||= File.expand_path("#{__FILE__}../../../../ssl/#{environment}/signed_certificate.pem")
     end
 
     def csr_subject
