@@ -17,14 +17,7 @@ require 'signet/configuration'
 require 'signet/certificate_authority'
 
 ENV['RACK_ENV'] = 'test'
-
 include Signet::Configuration
-
-BASE_SSL_PATH               = File.expand_path("#{__FILE__}../../../ssl/")
-CERTIFICATE_PATH            = "#{BASE_SSL_PATH}/#{environment}/signed_certificate.pem"
-PRODUCTION_CA_CERT_PATH     = "#{BASE_SSL_PATH}/production/ca_certificate.pem"
-PRODUCTION_PRIVATE_KEY_PATH = "#{BASE_SSL_PATH}/production/ca_private_key.pem"
-PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -35,6 +28,20 @@ RSpec.configure do |config|
 end
 
 FactoryGirl.find_definitions
+
+BASE_SSL_PATH               = File.expand_path("#{__FILE__}../../../ssl/")
+CERTIFICATE_PATH            = "#{BASE_SSL_PATH}/#{environment}/signed_certificate.pem"
+PRODUCTION_CA_CERT_PATH     = "#{BASE_SSL_PATH}/production/ca_certificate.pem"
+PRODUCTION_PRIVATE_KEY_PATH = "#{BASE_SSL_PATH}/production/ca_private_key.pem"
+PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
+
+INSTALL_PRODUCTION_FILES = <<-PENDING
+Install production CA certificate,  private key, and config to
+        - #{PRODUCTION_CA_CERT_PATH}
+        - #{PRODUCTION_PRIVATE_KEY_PATH}
+        - #{PRODUCTION_CONFIG_PATH}
+      to run these tests
+PENDING
 
 def valid_user
   @valid_user ||= FactoryGirl.build(:user)

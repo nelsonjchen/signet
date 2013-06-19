@@ -3,15 +3,6 @@ require 'openssl'
 require 'signet/certificate_authority'
 require 'signet/client'
 
-INSTALL_PRODUCTION_FILES = <<-PENDING
-
-    Install production CA certificate,  private key, and config to
-      - #{PRODUCTION_CA_CERT_PATH}
-      - #{PRODUCTION_PRIVATE_KEY_PATH}
-      - #{PRODUCTION_CONFIG_PATH}
-    to run these tests
-PENDING
-
 describe 'Production certificate authority integration' do
 
   before :all do
@@ -27,7 +18,9 @@ describe 'Production certificate authority integration' do
     unset_certificate_authority
   end
 
-  pending INSTALL_PRODUCTION_FILES unless production_files_exist?
+  before :each do
+    pending INSTALL_PRODUCTION_FILES unless production_files_exist?
+  end
 
   describe 'production CA private key'  do
 
