@@ -10,7 +10,6 @@ group :development, :test do
   gem 'factory_girl'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'json'
   gem 'rake'
   gem 'rspec'
   gem 'shotgun'
