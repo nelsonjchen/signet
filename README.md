@@ -19,7 +19,7 @@ client CLI. Both require minimal configuration.
 Operating
 ---------
 
-### Server
+### Server ###
 
 On the server,
 
@@ -41,7 +41,7 @@ start it up like any Rack app.
 RACK_ENV=production rackup # or thin or passenger or whatever
 ```
 
-### Client
+### Client ###
 
 On the client,
 
@@ -65,57 +65,57 @@ Configuration File
 Set the configuration file to match your environment. See `config/test.yml` for
 an example. Here's a rundown of all of the options.
 
-### database
+### database ###
 
 This section is used by [ActiveRecord][], so refer to ActiveRecord's
 documentation for help. If you've configured a Rails app's database connection,
 you know what to do.
 
-### certificate_authority:
+### certificate_authority ###
 
 This is the **certificate authority** configuration. This configures the
 certificate authority operated by this application.
 
-#### passphrase
+#### passphrase ####
 
 The passphrase to unlock the private key.
 
-#### subject
+#### subject ####
 
 The components of the subject are used to construct the subject line of the
 certificate authority. This must match your CA certificate. The order matters!
 
-#### expiry_seconds
+#### expiry_seconds ####
 
 The amount of time in seconds that newly-created certificates will be valid.
 `4.0e+8` is about 9.5 years, which is a nice number.
 
-#### serial
+#### serial ####
 
 The serial number of the CA certificate (only used when creating a certificate).
 This should probably be `1`.
 
-#### version
+#### version ####
 
 The X.509 version used to create new certificates. This number is zero-indexed,
 so `2` is `3`--the latest version.
 
-### client
+### client ###
 
 The configuration for the client which can be run to obtain certficates from the
 server.
 
-#### identity_key
+#### identity_key ####
 
 The `identity key` of the user requesting the certificate--checked against the
 users table in the database.
 
-#### server
+#### server ####
 
 The server URL. This should be set up on the clients to match the location of
 the server that you set up.
 
-#### name
+#### name ####
 
 The name (aka common name, aka CN) of the client requesting the certificate.
 This should be fairly unique to the client. For most clients, you'll want to
