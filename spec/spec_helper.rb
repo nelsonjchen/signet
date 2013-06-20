@@ -51,7 +51,7 @@ class SilentLogger
 end
 
 def valid_user
-  @valid_user ||= FactoryGirl.build(:user)
+  @valid_user ||= FactoryGirl.build(:valid_user)
 end
 
 def production_files_exist?
