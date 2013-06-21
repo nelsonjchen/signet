@@ -9,10 +9,6 @@ group :production do
   gem 'puma'
 end
 
-group :development do
-  gem 'shotgun'
-end
-
 group :test do
   gem 'coveralls'
   gem 'factory_girl'
@@ -25,4 +21,5 @@ end
 
 group :test, :development do
   gem 'sqlite3'
+  gem 'shotgun'
 end
