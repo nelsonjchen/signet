@@ -9,6 +9,14 @@ group :production do
   gem 'puma'
 end
 
+group :development, :test do
+  gem 'sqlite3'
+end
+
+group :development do
+  gem 'shotgun'
+end
+
 group :test do
   gem 'coveralls'
   gem 'factory_girl'
@@ -17,9 +25,4 @@ group :test do
   gem 'rack-test'
   gem 'rspec'
   gem 'simplecov'
-end
-
-group :test, :development do
-  gem 'sqlite3'
-  gem 'shotgun'
 end
