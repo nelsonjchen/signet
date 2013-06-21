@@ -1,18 +1,28 @@
 source 'https://rubygems.org'
 
 gem 'activerecord'
-gem 'pg'
 gem 'sinatra'
+gem 'rake'
 
-group :development, :test do
+group :production do
+  gem 'pg'
+  gem 'puma'
+end
+
+group :development do
+  gem 'shotgun'
+end
+
+group :test do
   gem 'coveralls'
   gem 'factory_girl'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rack-test'
-  gem 'rake'
   gem 'rspec'
-  gem 'shotgun'
   gem 'simplecov'
+end
+
+group :test, :development do
   gem 'sqlite3'
 end
