@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'rake'
 
 group :production do
+  gem 'foreman'
   gem 'pg'
   gem 'puma'
 end
