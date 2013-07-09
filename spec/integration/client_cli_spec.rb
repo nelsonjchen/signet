@@ -25,7 +25,9 @@ describe 'Client CLI integration' do
   before :all do
     FileUtils.rm_f CERTIFICATE_PATH
     begin
+      original_stdout = $stdout
       pid = fork do
+        $stdout = StringIO.new # silence the puma!
         Rack::Server.start \
           app:       Signet::HTTPServer,
           Port:      uri.port,
@@ -36,6 +38,7 @@ describe 'Client CLI integration' do
       `bin/signet-client`
     ensure
       Process.kill 'KILL', pid
+      $stdout = original_stdout
     end
   end
 
