@@ -25,18 +25,9 @@ describe Signet::Configuration do
   end
 
   around :each do |example|
-    reset = -> do
-      unset_configuration
-      begin
-        YAML.rspec_reset
-      rescue NoMethodError
-        # FIXME Ignore that! It can happen with random test ordering. Still, I'd
-        # rather write the specs so this stops happening than hack around it.
-      end
-    end
-    reset.call
+    unset_configuration
     example.run
-    reset.call
+    unset_configuration
   end
 
   describe '#config' do

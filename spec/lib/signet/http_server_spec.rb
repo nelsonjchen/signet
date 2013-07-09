@@ -47,8 +47,6 @@ describe Signet::HTTPServer do
 
   it 'generates a certificate for a valid certificate signing request' do
     csr_post
-    expect {
-      OpenSSL::X509::Certificate.new(last_response.body)
-    }.not_to raise_error OpenSSL::X509::CertificateError
+    expect { OpenSSL::X509::Certificate.new(last_response.body) }.not_to raise_error
   end
 end

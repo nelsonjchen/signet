@@ -25,7 +25,9 @@ describe 'Client CLI integration' do
   before :all do
     FileUtils.rm_f CERTIFICATE_PATH
     begin
+      original_stdout = $stdout
       pid = fork do
+        $stdout = StringIO.new # silence the puma!
         Rack::Server.start \
           app:       Signet::HTTPServer,
           Port:      uri.port,
@@ -36,6 +38,7 @@ describe 'Client CLI integration' do
       `bin/signet-client`
     ensure
       Process.kill 'KILL', pid
+      $stdout = original_stdout
     end
   end
 
@@ -50,9 +53,7 @@ describe 'Client CLI integration' do
     end
 
     it 'is a certificate' do
-      expect {
-        OpenSSL::X509::Certificate.new File.read(CERTIFICATE_PATH)
-      }.not_to raise_error OpenSSL::X509::CertificateError
+      expect { OpenSSL::X509::Certificate.new File.read(CERTIFICATE_PATH) }.not_to raise_error
     end
 
     it 'is signed by the certificate authority' do
