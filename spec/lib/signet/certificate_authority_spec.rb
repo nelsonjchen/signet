@@ -22,13 +22,9 @@ describe Signet::CertificateAuthority do
     describe "::#{method}" do # e.g. ::public_key
 
       it 'only loads data once for all instances of all classes' do
-        File.should_receive(:read).once.and_return(instance_variable_get("@#{method}")) # e.g. ...and_return(@public_key)
-        3.times do
-          Class.new do
-            3.times { Signet::CertificateAuthority.send(method) } # e.g. Signet::CertificateAuthority.public_key
-          end
-        end
-        File.rspec_reset
+        first  = Signet::CertificateAuthority.send(method)
+        second = Signet::CertificateAuthority.send(method)
+        first.should be second # i.e. not just equal, but same instance
       end
 
       it "returns the #{method} for the certificate authority" do
