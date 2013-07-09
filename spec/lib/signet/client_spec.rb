@@ -30,9 +30,7 @@ describe Signet::Client do
         end
 
         it 'is a certificate' do
-          expect {
-            OpenSSL::X509::Certificate.new File.read(CERTIFICATE_PATH)
-          }.not_to raise_error OpenSSL::X509::CertificateError
+          expect { OpenSSL::X509::Certificate.new File.read(CERTIFICATE_PATH) }.not_to raise_error
         end
 
         it 'is signed by the certificate authority' do
