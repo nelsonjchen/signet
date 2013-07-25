@@ -1,5 +1,9 @@
-require 'signet/user'
+require 'digest/sha1'
+require 'signet/authenticator'
 require 'signet/configuration'
+require 'signet/user'
+
+require 'signet/shims/authenticate_with_credentials'
 
 include Signet::Configuration
 

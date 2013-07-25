@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'signet/authenticator'
 require 'signet/user'
 
-
 describe Signet::Authenticator do
   describe '::valid_identity_key?' do
 

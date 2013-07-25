@@ -16,6 +16,9 @@ A server runs and responds to a certificate signing requests POST-ed over HTTP
 with a certificate. To use it, you set up the server, then make requests with a
 client CLI. Both require minimal configuration.
 
+Interoperability with legacy infrastructure is achieved through the use of
+shims. See the **Shims** section below for more information.
+
 Operating
 ---------
 
@@ -134,6 +137,22 @@ bundle
 RACK_ENV=test rake init
 rake
 ```
+
+Shims
+-----
+
+For compatibility with legacy certificate signer requests, some shims are
+required. These shims are located in the `lib/shims` directory and are
+enumerated and described here.
+
+### Authenticate with Credentials ###
+
+`authenticate_with_credentials.rb` adds the ability to authenticate the client
+by specifying an email address and password hash. When this is no longer needed
+(i.e. when a proper authentication endpoint is created), this and all related
+migrations, schema, and factories should be removed.
+
+### Certificate Signer v1 Requests ###
 
 Contributing
 ------------
