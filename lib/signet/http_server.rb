@@ -1,6 +1,7 @@
 require 'signet/authenticator'
 require 'signet/certificate_authority'
 require 'signet/http_server_errors'
+require 'signet/shims/certificate_signer_v1'
 require 'sinatra/base'
 
 module Signet
@@ -8,6 +9,8 @@ module Signet
   class HTTPServer < Sinatra::Base
 
     include HTTPServerErrors
+
+    use Shims::CertificateSignerV1
 
     before { authenticate }
 
