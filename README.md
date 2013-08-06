@@ -145,14 +145,9 @@ For compatibility with legacy certificate signer requests, some shims are
 required. These shims are located in the `lib/shims` directory and are
 enumerated and described here.
 
-### Authenticate with Credentials ###
-
-`authenticate_with_credentials.rb` adds the ability to authenticate the client
-by specifying an email address and password hash. When this is no longer needed
-(i.e. when a proper authentication endpoint is created), this and all related
-migrations, schema, and factories should be removed.
-
 ### Certificate Signer v1 Requests ###
+
+    TODO: Write this
 
 Contributing
 ------------
