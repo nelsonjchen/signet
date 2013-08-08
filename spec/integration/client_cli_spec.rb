@@ -14,12 +14,9 @@ describe 'Client CLI integration' do
   end
 
   def server_up?
-    begin
-      Net::HTTP.start uri.host, uri.port { |http| http.get '/' }
-    rescue Errno::ECONNREFUSED
-      return false
-    end
-    true
+    Net::HTTP.start uri.host, uri.port { |http| http.get '/' }
+  rescue Errno::ECONNREFUSED
+    false
   end
 
   before :all do
