@@ -34,31 +34,41 @@ module Signet
     end
 
     def certificate_signing_request
-      @certificate_signing_request ||= -> do
-        csr = OpenSSL::X509::Request.new
-
-        csr = OpenSSL::X509::Request.new
-        key = OpenSSL::PKey::RSA.new(2048)
-
-        csr.public_key = key.public_key
+      @certificate_signing_request ||= OpenSSL::X509::Request.new.tap do |csr|
+        csr.public_key = private_key.public_key
         csr.subject    = csr_subject
         csr.version    = config['certificate_authority']['version']
-        csr.sign key, OpenSSL::Digest::SHA1.new
-      end.call
+      end.sign private_key, OpenSSL::Digest::SHA1.new
     end
 
     def post_uri
       @post_uri ||= URI.parse "#{config['client']['server']}/csr"
     end
 
+    def ssl_path
+      @ssl_path ||= File.expand_path("#{__FILE__}../../../../ssl/#{environment}")
+    end
+
+    def private_key_path
+      @private_key_path ||= "#{ssl_path}/client_private_key.pem"
+    end
+
     def certificate_path
-      @certificate_path ||= File.expand_path("#{__FILE__}../../../../ssl/#{environment}/signed_certificate.pem")
+      @certificate_path ||= "#{ssl_path}/client_certificate.pem"
     end
 
     def csr_subject
       OpenSSL::X509::Name.new(
         config['certificate_authority']['subject'].merge({'CN' => @name}).to_a
       )
+    end
+
+    def private_key
+      OpenSSL::PKey.read File.read(private_key_path)
+    rescue Errno::ENOENT
+      key = OpenSSL::PKey::RSA.new(2048)
+      File.write private_key_path, key.to_pem
+      key
     end
   end
 end
