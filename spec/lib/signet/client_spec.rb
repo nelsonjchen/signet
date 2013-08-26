@@ -39,4 +39,14 @@ describe Signet::Client do
       end
     end
   end
+
+  describe 'private key behavior' do
+
+    it 'if no private key exists it creates and uses a new key and saves it to disk' do
+      FileUtils.rm_f CLIENT_PRIVATE_KEY_PATH
+      Signet::Client.new.send(:private_key)
+      reference = OpenSSL::PKey.read File.read(CLIENT_PRIVATE_KEY_PATH)
+      Signet::Client.new.send(:private_key).to_pem.should == reference.to_pem
+    end
+  end
 end
