@@ -15,6 +15,7 @@ require 'openssl'
 require 'rack/test'
 require 'signet/certificate_authority'
 require 'signet/configuration'
+require 'webmock/rspec'
 
 ENV['RACK_ENV'] = 'test'
 include Signet::Configuration
@@ -30,11 +31,13 @@ end
 FactoryGirl.find_definitions
 
 BASE_SSL_PATH               = File.expand_path("#{__FILE__}../../../ssl/")
+PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
+POST_URI                    = "http://#{config['client']['server']}:#{config['client']['port']}/csr"
+
 CERTIFICATE_PATH            = "#{BASE_SSL_PATH}/#{environment}/client_certificate.pem"
 CLIENT_PRIVATE_KEY_PATH     = "#{BASE_SSL_PATH}/#{environment}/client_private_key.pem"
 PRODUCTION_CA_CERT_PATH     = "#{BASE_SSL_PATH}/production/ca_certificate.pem"
 PRODUCTION_PRIVATE_KEY_PATH = "#{BASE_SSL_PATH}/production/ca_private_key.pem"
-PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
 
 INSTALL_PRODUCTION_FILES = <<-PENDING
 Install production CA certificate,  private key, and config to

@@ -15,7 +15,10 @@ describe Signet::Client do
 
       before :each do
         FileUtils.rm_f CERTIFICATE_PATH
-        Net::HTTP.stub(:post_form) { OpenStruct.new({body: valid_certificate.to_pem }) }
+        stub_request(:post, POST_URI).to_return(
+          status: 200,
+          body:   valid_certificate.to_pem,
+        )
         Signet::Client.run
       end
 
@@ -37,6 +40,12 @@ describe Signet::Client do
           OpenSSL::X509::Certificate.new(File.read CERTIFICATE_PATH).verify(ca_private_key).should be true
         end
       end
+    end
+
+    context 'HTTP 500 server error' do
+
+      it 'reports the error'
+      it 'does not write the certificate file'
     end
   end
 

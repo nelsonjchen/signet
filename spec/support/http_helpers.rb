@@ -21,6 +21,6 @@ module HTTPHelpers
       'auth' => valid_user.identity_key,
       'csr'  => valid_csr,
     }
-    post '/csr', default_params.merge(overrides)
+    post 'https://example.com/csr', default_params.merge(overrides)
   end
 end

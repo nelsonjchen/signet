@@ -1,4 +1,5 @@
 require 'net/http'
+require 'net/https'
 require 'openssl'
 require 'signet/configuration'
 
@@ -25,12 +26,33 @@ module Signet
       File.open(certificate_path, 'w') {|file| file.write certificate }
     end
 
+    def uri
+      @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}/csr"
+    end
+
+    def request
+      Net::HTTP::Post.new(uri.to_s).tap do |request|
+        request.set_form_data post_parameters
+      end
+    end
+
+    def http
+      Net::HTTP.new(uri.hostname, uri.port).tap do |http|
+        http.use_ssl = true if ENV['RACK_ENV'] == 'production'
+      end
+    end
+
     def certificate
-      response = Net::HTTP.post_form(post_uri, {
+      response = http.request request
+      # TODO handle non-200 response codes. D'doy!
+      response.body
+    end
+
+    def post_parameters
+      @post_parameters ||= {
         'auth' => config['client']['identity_key'],
         'csr'  => certificate_signing_request.to_pem,
-      })
-      response.body
+      }
     end
 
     def certificate_signing_request
@@ -39,10 +61,6 @@ module Signet
         csr.subject    = csr_subject
         csr.version    = config['certificate_authority']['version']
       end.sign private_key, OpenSSL::Digest::SHA1.new
-    end
-
-    def post_uri
-      @post_uri ||= URI.parse "#{config['client']['server']}/csr"
     end
 
     def ssl_path

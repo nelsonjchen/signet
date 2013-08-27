@@ -10,7 +10,7 @@ describe 'Client CLI integration' do
   extend Signet::Configuration
 
   def uri
-    @uri ||= URI(config['client']['server'])
+    @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}"
   end
 
   def server_up?
@@ -56,5 +56,11 @@ describe 'Client CLI integration' do
     it 'is signed by the certificate authority' do
       OpenSSL::X509::Certificate.new(File.read CERTIFICATE_PATH).verify(ca_private_key).should be true
     end
+  end
+
+  context 'when there is an HTTP 500 Server Error' do
+
+    it 'reports the error'
+    it 'does not write the file'
   end
 end
