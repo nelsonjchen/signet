@@ -9,17 +9,15 @@ module Signet
     include Signet::Configuration
 
     def self.run
-      new.send :run
+      new.send :save_certificate_to_file
     end
 
     private
 
+    SERVER_ERROR_MESSAGE = 'The server had an internal error. Check the server logs.'
+
     def initialize
       @name = config['client']['name']
-    end
-
-    def run
-      save_certificate_to_file
     end
 
     def save_certificate_to_file
@@ -44,8 +42,13 @@ module Signet
 
     def certificate
       response = http.request request
-      # TODO handle non-200 response codes. D'doy!
+      report_server_error_and_quit! if response.code == '500'
       response.body
+    end
+
+    def report_server_error_and_quit!
+      warn SERVER_ERROR_MESSAGE
+      exit false
     end
 
     def post_parameters

@@ -11,10 +11,13 @@ describe Signet::Client do
 
   describe '::run' do
 
+    before :each do
+      FileUtils.rm_f CERTIFICATE_PATH
+    end
+
     context 'success' do
 
       before :each do
-        FileUtils.rm_f CERTIFICATE_PATH
         stub_request(:post, POST_URI).to_return(
           status: 200,
           body:   valid_certificate.to_pem,
@@ -44,8 +47,18 @@ describe Signet::Client do
 
     context 'HTTP 500 server error' do
 
-      it 'reports the error'
-      it 'does not write the certificate file'
+      before :each do
+        stub_request(:post, POST_URI).to_return status: 500
+      end
+
+      it 'reports the error and exits' do
+        Signet::Client.any_instance.should_receive :warn
+        expect { Signet::Client.run }.to raise_error SystemExit
+      end
+
+      it 'does not write the certificate file' do
+        File.exist?(CERTIFICATE_PATH).should be false
+      end
     end
   end
 

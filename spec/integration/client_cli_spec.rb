@@ -57,10 +57,4 @@ describe 'Client CLI integration' do
       OpenSSL::X509::Certificate.new(File.read CERTIFICATE_PATH).verify(ca_private_key).should be true
     end
   end
-
-  context 'when there is an HTTP 500 Server Error' do
-
-    it 'reports the error'
-    it 'does not write the file'
-  end
 end
