@@ -11,11 +11,17 @@ describe Signet::Client do
 
   describe '::run' do
 
+    before :each do
+      FileUtils.rm_f CERTIFICATE_PATH
+    end
+
     context 'success' do
 
       before :each do
-        FileUtils.rm_f CERTIFICATE_PATH
-        Net::HTTP.stub(:post_form) { OpenStruct.new({body: valid_certificate.to_pem }) }
+        stub_request(:post, POST_URI).to_return(
+          status: 200,
+          body:   valid_certificate.to_pem,
+        )
         Signet::Client.run
       end
 
@@ -36,6 +42,22 @@ describe Signet::Client do
         it 'is signed by the certificate authority' do
           OpenSSL::X509::Certificate.new(File.read CERTIFICATE_PATH).verify(ca_private_key).should be true
         end
+      end
+    end
+
+    context 'HTTP 500 server error' do
+
+      before :each do
+        stub_request(:post, POST_URI).to_return status: 500
+      end
+
+      it 'reports the error and exits' do
+        Signet::Client.any_instance.should_receive :warn
+        expect { Signet::Client.run }.to raise_error SystemExit
+      end
+
+      it 'does not write the certificate file' do
+        File.exist?(CERTIFICATE_PATH).should be false
       end
     end
   end

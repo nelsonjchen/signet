@@ -10,7 +10,7 @@ describe 'Client CLI integration' do
   extend Signet::Configuration
 
   def uri
-    @uri ||= URI(config['client']['server'])
+    @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}"
   end
 
   def server_up?

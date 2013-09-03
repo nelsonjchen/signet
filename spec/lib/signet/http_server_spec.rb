@@ -6,6 +6,7 @@ require 'support/openssl_helpers'
 describe Signet::HTTPServer do
 
   include HTTPHelpers
+  include Rack::Test::Methods
 
   describe 'authentication' do
 
@@ -31,7 +32,7 @@ describe Signet::HTTPServer do
   end
 
   it 'does not accept GETs to /csr' do
-    get "/csr?auth=#{valid_user.identity_key}"
+    get "https://example.com/csr?auth=#{valid_user.identity_key}"
     last_response.status.should == status_code(:not_found)
   end
 
