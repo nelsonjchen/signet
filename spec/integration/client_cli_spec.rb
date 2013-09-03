@@ -10,11 +10,16 @@ describe 'Client CLI integration' do
   extend Signet::Configuration
 
   def uri
-    @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}"
+    @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}/csr"
   end
 
   def server_up?
-    Net::HTTP.start uri.host, uri.port { |http| http.get '/' }
+    Net::HTTP.start uri.host, uri.port do |http|
+      request = Net::HTTP::Post.new(uri.to_s)
+      request.set_form_data 'auth' => 'BAD_AUTH'
+      response = http.request request
+      response.code == '403'
+    end
   rescue Errno::ECONNREFUSED
     false
   end

@@ -30,6 +30,8 @@ end
 
 FactoryGirl.find_definitions
 
+WebMock.allow_net_connect! # otherwise, it breaks testing integration/client_cli_spec.rb
+
 BASE_SSL_PATH               = File.expand_path("#{__FILE__}../../../ssl/")
 PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
 POST_URI                    = "http://#{config['client']['server']}:#{config['client']['port']}/csr"
