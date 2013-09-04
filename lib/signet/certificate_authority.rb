@@ -63,6 +63,12 @@ module Signet
 
     private
 
+    SSL_EXTENSIONS = [
+      [ 'basicConstraints',     'CA:FALSE' ],
+      [ 'keyUsage',             'keyEncipherment,dataEncipherment,digitalSignature' ],
+      [ 'subjectKeyIdentifier', 'hash' ],
+    ]
+
     def private_key_path
       @@private_key_path ||= "#{ssl_prefix}/#{environment}/ca_private_key.pem"
     end
@@ -87,27 +93,31 @@ module Signet
     #
     def certificate_for(csr)
       OpenSSL::X509::Certificate.new.tap do |cert|
-        now             = Time.now
-        cert.subject    = csr.subject
-        cert.public_key = csr.public_key
-        cert.serial     = serial
-        cert.issuer     = subject
-        cert.version    = config['certificate_authority']['version']
-        cert.not_before = now
-        cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+        set_attributes_on cert, csr
+        add_extensions_to cert
+      end
+    end
 
-        extension_factory = OpenSSL::X509::ExtensionFactory.new
-        extension_factory.subject_certificate = cert
-        extension_factory.issuer_certificate  = certificate
+    def add_extensions_to(cert)
+      OpenSSL::X509::ExtensionFactory.new.tap do |factory|
+        factory.subject_certificate = cert
+        factory.issuer_certificate  = certificate
 
-        [
-          [ 'basicConstraints', 'CA:FALSE' ],
-          [ 'keyUsage', 'keyEncipherment,dataEncipherment,digitalSignature' ],
-          [ 'subjectKeyIdentifier', 'hash' ],
-        ].each do |extension|
-          cert.add_extension extension_factory.create_extension extension
+        SSL_EXTENSIONS.each do |extension|
+          cert.add_extension factory.create_extension extension
         end
       end
+    end
+
+    def set_attributes_on(cert, csr)
+      now             = Time.now
+      cert.subject    = csr.subject
+      cert.public_key = csr.public_key
+      cert.serial     = serial
+      cert.issuer     = subject
+      cert.version    = config['certificate_authority']['version']
+      cert.not_before = now
+      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
     end
   end
 end
