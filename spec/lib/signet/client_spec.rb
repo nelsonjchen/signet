@@ -26,7 +26,7 @@ describe Signet::Client do
       end
 
       it 'creates the certificate file for the given environment' do
-        File.exist?(CERTIFICATE_PATH).should be true
+        File.exist?(CERTIFICATE_PATH).should be false
       end
 
       describe 'the certificate file' do
