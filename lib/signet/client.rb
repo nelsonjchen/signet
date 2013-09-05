@@ -25,7 +25,11 @@ module Signet
     end
 
     def uri
-      @uri ||= URI.parse "https://#{config.client.host}:#{config.client.port}/csr"
+      unless @uri
+        protocol = use_https? ? 'https' : 'http'
+        @uri = URI.parse "#{protocol}://#{config.client.host}:#{config.client.port}/csr"
+      end
+      @uri
     end
 
     def request

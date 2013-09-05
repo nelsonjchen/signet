@@ -10,7 +10,11 @@ describe 'Client CLI integration' do
   extend Signet::Configuration
 
   def uri
-    @uri ||= URI.parse "https://#{config.client.host}:#{config.client.port}/csr"
+    unless @uri
+      protocol = config.client.disable_https ? 'http' : 'https'
+      @uri = URI.parse "#{protocol}://#{config.client.host}:#{config.client.port}/csr"
+    end
+    @uri
   end
 
   def server_up?
