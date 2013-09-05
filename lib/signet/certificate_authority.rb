@@ -45,7 +45,7 @@ module Signet
 
     def private_key
       @@private_key ||= OpenSSL::PKey::RSA.new(
-        File.read(private_key_path), config['certificate_authority']['passphrase']
+        File.read(private_key_path), config.certificate_authority.passphrase
       )
     end
 
@@ -115,9 +115,9 @@ module Signet
       cert.public_key = csr.public_key
       cert.serial     = serial
       cert.issuer     = subject
-      cert.version    = config['certificate_authority']['version']
+      cert.version    = config.certificate_authority.version
       cert.not_before = now
-      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+      cert.not_after  = now + config.certificate_authority.expiry_seconds
     end
   end
 end

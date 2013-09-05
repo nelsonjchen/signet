@@ -58,7 +58,7 @@ describe Signet::CertificateAuthority do
     end
 
     it 'creates certificates with the version from the configuration file' do
-      Signet::CertificateAuthority.sign(valid_csr).version.should == config['certificate_authority']['version']
+      Signet::CertificateAuthority.sign(valid_csr).version.should == config.certificate_authority.version
     end
   end
 

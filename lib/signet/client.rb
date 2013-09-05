@@ -17,7 +17,7 @@ module Signet
     SERVER_ERROR_MESSAGE = 'The server had an internal error. Check the server logs.'
 
     def initialize
-      @name = config['client']['name']
+      @name = config.client.name
     end
 
     def save_certificate_to_file
@@ -25,7 +25,7 @@ module Signet
     end
 
     def uri
-      @uri ||= URI.parse "https://#{config['client']['server']}:#{config['client']['port']}/csr"
+      @uri ||= URI.parse "https://#{config.client.host}:#{config.client.port}/csr"
     end
 
     def request
@@ -34,9 +34,13 @@ module Signet
       end
     end
 
+    def use_https?
+      !config.client.disable_https
+    end
+
     def http
       Net::HTTP.new(uri.hostname, uri.port).tap do |http|
-        http.use_ssl = true if ENV['RACK_ENV'] == 'production'
+        http.use_ssl = true if use_https?
       end
     end
 
@@ -53,7 +57,7 @@ module Signet
 
     def post_parameters
       @post_parameters ||= {
-        'auth' => config['client']['identity_key'],
+        'auth' => config.client.identity_key,
         'csr'  => certificate_signing_request.to_pem,
       }
     end
@@ -62,7 +66,7 @@ module Signet
       @certificate_signing_request ||= OpenSSL::X509::Request.new.tap do |csr|
         csr.public_key = private_key.public_key
         csr.subject    = csr_subject
-        csr.version    = config['certificate_authority']['version']
+        csr.version    = config.certificate_authority.version
       end.sign private_key, OpenSSL::Digest::SHA1.new
     end
 
@@ -80,7 +84,7 @@ module Signet
 
     def csr_subject
       OpenSSL::X509::Name.new(
-        config['certificate_authority']['subject'].merge({'CN' => @name}).to_a
+        config.certificate_authority.subject.merge({'CN' => @name}).to_a
       )
     end
 

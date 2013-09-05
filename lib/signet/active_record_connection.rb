@@ -4,6 +4,6 @@ require 'signet/configuration'
 module Signet
   module ActiveRecordConnection
     extend Configuration
-    ActiveRecord::Base.establish_connection config['database']
+    ActiveRecord::Base.establish_connection config.database
   end
 end

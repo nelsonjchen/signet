@@ -71,4 +71,31 @@ describe Signet::Client do
       Signet::Client.new.send(:private_key).to_pem.should == reference.to_pem
     end
   end
+
+  describe 'HTTPS behavior' do
+
+    context 'when no option is set' do
+
+      it 'uses HTTPS' do
+        config.client.stub(:disable_https).and_return nil
+        Signet::Client.new.send(:use_https?).should == true
+      end
+    end
+
+    context 'when HTTPS is enabled' do
+
+      it 'uses HTTPS' do
+        config.client.stub(:disable_https).and_return false
+        Signet::Client.new.send(:use_https?).should == true
+      end
+    end
+
+    context 'when HTTPS is disabled' do
+
+      it 'does not use HTTPS' do
+        config.client.stub(:disable_https).and_return true
+        Signet::Client.new.send(:use_https?).should == false
+      end
+    end
+  end
 end
