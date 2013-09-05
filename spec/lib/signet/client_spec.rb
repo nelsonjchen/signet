@@ -79,6 +79,7 @@ describe Signet::Client do
       it 'uses HTTPS' do
         config.client.stub(:disable_https).and_return nil
         Signet::Client.new.send(:use_https?).should == true
+        Signet::Client.new.send(:uri).to_s.should =~ /https:/
       end
     end
 
@@ -87,6 +88,7 @@ describe Signet::Client do
       it 'uses HTTPS' do
         config.client.stub(:disable_https).and_return false
         Signet::Client.new.send(:use_https?).should == true
+        Signet::Client.new.send(:uri).to_s.should =~ /https:/
       end
     end
 
@@ -95,6 +97,7 @@ describe Signet::Client do
       it 'does not use HTTPS' do
         config.client.stub(:disable_https).and_return true
         Signet::Client.new.send(:use_https?).should == false
+        Signet::Client.new.send(:uri).to_s.should =~ /http:/
       end
     end
   end
