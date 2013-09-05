@@ -7,4 +7,5 @@ before_script:
 notifications:
   hipchat:
     rooms:
-      secure: V3m5xOmEKFWHTbmSkyAZRulXca6EGS74yIQDpKxAlbJlKVS9upb1/5lW6l6eJzuKpCRA9Hln74Pw3Lum110F4a3YKcPXYsqig0L6sJDCrrQ+0QMQrJ/iJvISuj1UIwLIi5rjgtrzgmgBs/ZSHXjQ/7mjs3SQ8pEnV4oqhsKQkuM=
+      - secure: V3m5xOmEKFWHTbmSkyAZRulXca6EGS74yIQDpKxAlbJlKVS9upb1/5lW6l6eJzuKpCRA9Hln74Pw3Lum110F4a3YKcPXYsqig0L6sJDCrrQ+0QMQrJ/iJvISuj1UIwLIi5rjgtrzgmgBs/ZSHXjQ/7mjs3SQ8pEnV4oqhsKQkuM=
+      - secure: "SQ7FDJqQvwU10NWEfvRHlyLSuTlJNQ4FmiQ33YyN58vUw93abaGoYJOEFzG6v03FwK+MoMe+2ZOKwcdSzLXK/kyo1LhnoivP9blTBNpI+T4a2etjECaMJeeyl9bH+9QYXMau9TQnBLwFjYi1dX4kt8E4qfyNX/W+oxd2/NEKBoE="
