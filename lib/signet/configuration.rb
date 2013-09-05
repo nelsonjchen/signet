@@ -1,10 +1,11 @@
 require 'yaml'
+require 'hashie/mash'
 
 module Signet
   module Configuration
 
     def config
-      @@config ||= YAML.load_file(config_path)
+      @@config ||= Hashie::Mash.new(YAML.load_file config_path)
     end
 
     def environment

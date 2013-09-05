@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'signet/configuration'
+require 'hashie/mash'
 
 FAKE_CONFIG = {}
 
@@ -32,8 +33,8 @@ describe Signet::Configuration do
 
   describe '#config' do
 
-    it 'returns the configuration as a Hash' do
-      new_class.new.config.should be_a Hash
+    it 'returns the configuration as a Hashie::Mash' do
+      new_class.new.config.should be_a Hashie::Mash
     end
 
     it 'loads the configuration for the current environment' do

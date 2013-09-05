@@ -32,7 +32,7 @@ namespace :db do
 end
 
 task :environment do
-  ActiveRecord::Base.establish_connection config['database']
+  ActiveRecord::Base.establish_connection config.database
 end
 
 namespace :ssl do
@@ -52,7 +52,7 @@ module TaskHelper
     SSL_DIR             = "ssl/#{environment}"
     KEY_FILE            = "#{SSL_DIR}/ca_private_key.pem"
     CA_CERTIFICATE_FILE = "#{SSL_DIR}/ca_certificate.pem"
-    KEY_PASSPHRASE      = config['certificate_authority']['passphrase']
+    KEY_PASSPHRASE      = config.certificate_authority.passphrase
 
     def self.ca
       new.setup
@@ -71,13 +71,13 @@ module TaskHelper
 
     def make_certificate
       cert            = OpenSSL::X509::Certificate.new
-      subject         = OpenSSL::X509::Name.new(config['certificate_authority']['subject'].to_a)
+      subject         = OpenSSL::X509::Name.new(config.certificate_authority.subject.to_a)
       cert.subject    = subject
       cert.issuer     = subject
-      cert.version    = config['certificate_authority']['version']
-      cert.serial     = config['certificate_authority']['serial']
+      cert.version    = config.certificate_authority.version
+      cert.serial     = config.certificate_authority.serial
       cert.not_before = Time.now
-      cert.not_after  = Time.now + config['certificate_authority']['expiry_seconds']
+      cert.not_after  = Time.now + config.certificate_authority.expiry_seconds
       cert.public_key = key.public_key
 
       extension_factory = OpenSSL::X509::ExtensionFactory.new

@@ -34,7 +34,7 @@ WebMock.allow_net_connect! # otherwise, it breaks testing integration/client_cli
 
 BASE_SSL_PATH               = File.expand_path("#{__FILE__}../../../ssl/")
 PRODUCTION_CONFIG_PATH      = File.expand_path("#{__FILE__}../../../config/production.yml")
-POST_URI                    = "http://#{config['client']['server']}:#{config['client']['port']}/csr"
+POST_URI                    = "http://#{config.client.host}:#{config.client.port}/csr"
 
 CERTIFICATE_PATH            = "#{BASE_SSL_PATH}/#{environment}/client_certificate.pem"
 CLIENT_PRIVATE_KEY_PATH     = "#{BASE_SSL_PATH}/#{environment}/client_private_key.pem"

@@ -13,7 +13,7 @@ module OpenSSLHelpers
 
     csr.public_key = key.public_key
     csr.subject    = csr_subject
-    csr.version    = config['certificate_authority']['version']
+    csr.version    = config.certificate_authority.version
 
     csr.sign key, OpenSSL::Digest::SHA1.new
   end
@@ -25,15 +25,15 @@ module OpenSSLHelpers
       cert.subject    = csr.subject
       cert.public_key = csr.public_key
       cert.serial     = cert_serial
-      cert.version    = config['certificate_authority']['version']
+      cert.version    = config.certificate_authority.version
       cert.not_before = now
-      cert.not_after  = now + config['certificate_authority']['expiry_seconds']
+      cert.not_after  = now + config.certificate_authority.expiry_seconds
       cert.sign ca_private_key, OpenSSL::Digest::SHA1.new
     end
   end
 
   def ca_private_key
-    OpenSSL::PKey::RSA.new(File.read(ca_private_key_path), config['certificate_authority']['passphrase'])
+    OpenSSL::PKey::RSA.new(File.read(ca_private_key_path), config.certificate_authority.passphrase)
   end
 
   def ca_certificate
@@ -82,7 +82,7 @@ module OpenSSLHelpers
 
   def csr_subject
     OpenSSL::X509::Name.new(
-      config['certificate_authority']['subject'].merge({'CN' => @name}).to_a
+      config.certificate_authority.subject.merge({'CN' => @name}).to_a
     )
   end
 
