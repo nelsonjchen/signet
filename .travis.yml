@@ -4,3 +4,7 @@ rvm:
   - 2.0.0
 before_script:
   - RACK_ENV=test rake init
+notifications:
+  hipchat:
+    rooms:
+      secure: soMNJbHWhCkDX0QifGl/7aYeIlSY4ka0cOvuSY+22HBNlTpuQ2iLowXIR58N55UfJI9Oir239zbv1KfwBZlMuDvi+Pm6sbikuqBMZuZLx6ShypYksDQq8Or7WGJOY1EVWADeeJgZTnphIlXiOwk00Fl6o2XqhajPC1VUqmk4qkQ=
